@@ -9,8 +9,13 @@ const RegisterPageTemplate = () => {
 		confirmPassword: "",
 		name: "",
 	};
-	const { error, credentials, handleChange, isLoading, register } =
-		useRegisterMutation(initialState);
+	const {
+		error,
+		initialState: credentials,
+		handleChange,
+		isLoading,
+		register,
+	} = useRegisterMutation(initialState);
 	return (
 		<form
 			onSubmit={register}
@@ -18,7 +23,7 @@ const RegisterPageTemplate = () => {
 		>
 			{/* <h1 className="text-left text-2xl font-bold uppercase">Signup</h1> */}
 			<div className="grid gap-3 rounded-lg bg-white p-5 shadow-lg md:gap-8 md:p-10">
-				<h1 className="text-left text-2xl font-bold uppercase">Register</h1>
+				{/* <h1 className="text-left text-2xl font-bold uppercase">Register</h1> */}
 				<div>
 					<label
 						className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
@@ -51,8 +56,8 @@ const RegisterPageTemplate = () => {
 								error && error["name"] ? "border-red-500" : ""
 							} block w-full min-w-0 flex-1 rounded-none rounded-r-lg border border-gray-300 bg-gray-50 py-4 p-2.5 text-sm text-gray-900 outline-none`}
 							name="name"
-							placeholder="**********"
-							type="password"
+							placeholder="John Doe"
+							type="text"
 							onChange={handleChange("name")}
 							value={credentials.name}
 						/>
@@ -100,7 +105,7 @@ const RegisterPageTemplate = () => {
 								error && error["email"] ? "border-red-500" : ""
 							} block w-full min-w-0 flex-1 rounded-none rounded-r-lg border border-gray-300 bg-gray-50 py-4 p-2.5 text-sm text-gray-900 outline-none`}
 							name="email"
-							placeholder="**********"
+							placeholder="johndoe@email.com"
 							type="email"
 							onChange={handleChange("email")}
 							value={credentials.email}
@@ -143,7 +148,7 @@ const RegisterPageTemplate = () => {
 							placeholder="**********"
 							type="password"
 							onChange={handleChange("password")}
-							value={credentials.confirmPassword}
+							value={credentials.password}
 						/>
 					</div>
 				</div>

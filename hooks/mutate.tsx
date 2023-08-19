@@ -1,17 +1,24 @@
 import React from "react";
 import axiosInstance from "../lib/axiosInstance";
 import { toast } from "react-toastify";
-import { Warning } from "react-ionicons";
+import { Checkmark, Warning } from "react-ionicons";
+import { useRouter } from "next/router";
+import csrfToken from "../utils/csrfToken";
 
-const useLoginMutation = (credentials: { email: string; password: string }) => {
-	const [loginCredentials, setLoginCredentials] =
-		React.useState<typeof credentials>(credentials);
-	const [error, setError] = React.useState<typeof credentials | null>(null);
+const useLoginMutation = (initialState: {
+	email: string;
+	password: string;
+}) => {
+	const router = useRouter();
+	const [loginCredentials, setLogininitialState] =
+		React.useState<typeof initialState>(initialState);
+	const [error, setError] = React.useState<typeof initialState | null>(null);
 	const [isLoading, setIsLoading] = React.useState<boolean>(false);
+	const [data, setData] = React.useState<any | null>(null);
 
 	const handleChange =
 		(name: "email" | "password") => (e: React.ChangeEvent<HTMLInputElement>) => {
-			setLoginCredentials({ ...loginCredentials, [name]: e.target.value });
+			setLogininitialState({ ...loginCredentials, [name]: e.target.value });
 			setError({
 				email: "",
 				password: "",
@@ -21,6 +28,7 @@ const useLoginMutation = (credentials: { email: string; password: string }) => {
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsLoading(true);
+		const { next } = router.query;
 		if (
 			!loginCredentials ||
 			!loginCredentials.email ||
@@ -37,28 +45,32 @@ const useLoginMutation = (credentials: { email: string; password: string }) => {
 			const response = await axiosInstance.post("/auth/login", {
 				...loginCredentials,
 			});
-			console.log(loginCredentials);
 			console.log(response.data);
-			setIsLoading(response.data ? false : true);
-			// setTimeout(() => {
-			// 	setIsLoading(false);
-			// }, 2000);
-		} catch (error) {
+			setData(response.data);
+			setTimeout(() => {
+				if (next) router.replace(next.toString());
+				router.replace("/profile");
+			}, 2000);
+		} catch (error: any) {
 			console.log("Error logging in: ", error);
 			setIsLoading(false);
-			toast.error("An error occured. Please try again.", {
-				autoClose: 5000,
-				closeOnClick: true,
-				draggable: true,
-				position: "top-right",
-				icon: <Warning color="white" />,
-				hideProgressBar: true,
-				style: {
-					background: "#d31119",
-					color: "#fff",
-					fontWeight: "600",
+			setData(error.response.data);
+			toast.error(
+				error?.response?.data.message || "An error occured. Please try again.",
+				{
+					autoClose: 5000,
+					closeOnClick: true,
+					draggable: true,
+					position: "top-right",
+					icon: <Warning color="white" />,
+					hideProgressBar: true,
+					style: {
+						background: "#d31119",
+						color: "#fff",
+						fontWeight: "600",
+					},
 				},
-			});
+			);
 		}
 	};
 
@@ -68,18 +80,20 @@ const useLoginMutation = (credentials: { email: string; password: string }) => {
 		error,
 		login: handleLogin,
 		handleChange,
+		response: data,
 	};
 };
-const useRegisterMutation = (credentials: {
+const useRegisterMutation = (initialState: {
 	email: string;
 	password: string;
 	name: string;
 	confirmPassword: string;
 }) => {
 	const [registrationData, setRegistrationData] =
-		React.useState<typeof credentials>(credentials);
+		React.useState<typeof initialState>(initialState);
 	const [isLoading, setIsLoading] = React.useState<boolean>(false);
-	const [error, setError] = React.useState<typeof credentials | null>(null);
+	const [error, setError] = React.useState<typeof initialState | null>(null);
+	const [data, setData] = React.useState<any | null>(null);
 
 	const handleChange =
 		(name: "email" | "password" | "name" | "confirmPassword") =>
@@ -108,7 +122,7 @@ const useRegisterMutation = (credentials: {
 				password: !registrationData?.password ? "This field is required" : "",
 				confirmPassword:
 					registrationData?.password !== registrationData?.confirmPassword
-						? "This field is required"
+						? "Password doesn't match"
 						: "",
 			});
 			setIsLoading(false);
@@ -118,37 +132,53 @@ const useRegisterMutation = (credentials: {
 			const response = await axiosInstance.post("/auth/register", {
 				...registrationData,
 			});
-			console.log(registrationData);
 			console.log(response.data);
 			setIsLoading(response.data ? false : true);
-			// setTimeout(() => {
-			// 	setIsLoading(false);
-			// }, 2000);
-		} catch (error) {
-			console.log("Error logging in: ", error);
-			setIsLoading(false);
-			toast.error("An error occured. Please try again.", {
+			setRegistrationData(initialState);
+			setData(response.data);
+			toast.success(response.data.message, {
 				autoClose: 5000,
 				closeOnClick: true,
 				draggable: true,
 				position: "top-right",
-				icon: <Warning color="white" />,
+				icon: <Checkmark color="white" />,
 				hideProgressBar: true,
 				style: {
-					background: "#d31119",
+					background: "green",
 					color: "#fff",
 					fontWeight: "600",
 				},
 			});
+		} catch (error: any) {
+			console.log("Error registering user: ", error);
+			setIsLoading(false);
+			setData(error.response.data);
+			toast.error(
+				error?.response?.data.message || "An error occured. Please try again.",
+				{
+					autoClose: 5000,
+					closeOnClick: true,
+					draggable: true,
+					position: "top-right",
+					icon: <Warning color="white" />,
+					hideProgressBar: true,
+					style: {
+						background: "#d31119",
+						color: "#fff",
+						fontWeight: "600",
+					},
+				},
+			);
 		}
 	};
 
 	return {
-		credentials: registrationData,
+		initialState: registrationData,
 		isLoading,
 		error,
 		register: handleSubmit,
 		handleChange,
+		response: data,
 	};
 };
 

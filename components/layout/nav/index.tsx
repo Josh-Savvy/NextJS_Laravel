@@ -1,8 +1,10 @@
 import Link from "next/link";
 import React from "react";
 import useAuth from "../../../hooks/auth";
+import { useRouter } from "next/router";
 
 const Navbar = () => {
+	const router = useRouter();
 	const { logout, isAuth } = useAuth();
 	function showNotificationPane() {
 		const notificationContent = document.getElementById("notificationContent");
@@ -13,6 +15,15 @@ const Navbar = () => {
 			// notificationContent.classList.toggle('translate-x-[500%]');
 		}
 	}
+	const getPageTitle = () => {
+		return router.asPath.includes("register")
+			? "register"
+			: router.asPath.includes("login")
+			? "Login"
+			: router.asPath.includes("activate")
+			? "Activate Account"
+			: "Feed";
+	};
 	return (
 		<nav className="mb-5 flex items-center justify-between bg-white p-3 px-4 shadow-lg sm:px-8">
 			<Link href="/">
@@ -20,6 +31,9 @@ const Navbar = () => {
 					<h1 className="text-4xl font-bold uppercase text-white md:text-5xl">p</h1>
 				</div>
 			</Link>
+			<h1 className="uppercase font-bold text-2xl tracking-tight">
+				{getPageTitle()}
+			</h1>
 			<ul className="flex items-center gap-4">
 				<div className="group relative flex items-center gap-4 rounded-full p-3 duration-300 hover:text-white hover:shadow-xl">
 					<svg

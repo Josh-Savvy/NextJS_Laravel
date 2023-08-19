@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import useAuth from "../../../hooks/auth";
 import Link from "next/link";
 import { useLoginMutation } from "../../../hooks/mutate";
 
@@ -8,8 +7,9 @@ const LoginPageTemplate = () => {
 		email: "",
 		password: "",
 	};
-	const { credentials, error, isLoading, login, handleChange } =
+	const { credentials, error, isLoading, login, handleChange, response } =
 		useLoginMutation(initialState);
+
 	return (
 		<form
 			onSubmit={login}
@@ -17,16 +17,16 @@ const LoginPageTemplate = () => {
 		>
 			<div className="grid gap-3 rounded-lg bg-white p-5 shadow-lg md:gap-8 md:p-10">
 				{/* <h1 className="text-left text-2xl font-bold text-center uppercase">Login</h1> */}
-				<h1 className="text-left text-2xl font-bold uppercase">Login</h1>
+				{/* <h1 className="text-left text-2xl font-bold uppercase">Login</h1> */}
 				<div>
 					<label
-						className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+						className="mb-2 block text-sm tracking-tight font-medium text-gray-900 dark:text-white"
 						htmlFor="email"
 					>
 						Email
 					</label>
 					{error && error.email ? (
-						<span className="text-sm text-red-500">{error.email}</span>
+						<span className="text-sm text-red-500 tracking-tight">{error.email}</span>
 					) : (
 						""
 					)}
@@ -58,7 +58,7 @@ const LoginPageTemplate = () => {
 						<input
 							className={`${
 								error && error["email"] ? "border-red-500" : ""
-							} block w-full min-w-0 flex-1 rounded-none rounded-r-lg border border-gray-300 bg-gray-50 py-4 p-2.5 text-sm text-gray-900 outline-none`}
+							} block w-full min-w-0 flex-1 tracking-tight rounded-none rounded-r-lg border border-gray-300 bg-gray-50 py-4 p-2.5 text-sm text-gray-900 outline-none`}
 							name="email"
 							placeholder="example@mail.com"
 							type="email"
@@ -69,13 +69,15 @@ const LoginPageTemplate = () => {
 				</div>
 				<div>
 					<label
-						className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+						className="mb-2 block tracking-tight text-sm font-medium text-gray-900 dark:text-white"
 						htmlFor="password"
 					>
 						Password
 					</label>
 					{error && error.password ? (
-						<span className="text-sm text-red-500">{error.password}</span>
+						<span className="text-sm text-red-500 tracking-tight">
+							{error.password}
+						</span>
 					) : (
 						""
 					)}
@@ -98,7 +100,7 @@ const LoginPageTemplate = () => {
 						<input
 							className={`${
 								error && error["password"] ? "border-red-500" : ""
-							} block w-full min-w-0 flex-1 rounded-none rounded-r-lg border border-gray-300 bg-gray-50 py-4 p-2.5 text-sm text-gray-900 outline-none`}
+							} block w-full min-w-0 flex-1 tracking-tight rounded-none rounded-r-lg border border-gray-300 bg-gray-50 py-4 p-2.5 text-sm text-gray-900 outline-none`}
 							name="password"
 							placeholder="************"
 							type="password"
@@ -111,24 +113,36 @@ const LoginPageTemplate = () => {
 					<div className="flex items-center gap-1 font-medium">
 						<p>New user?</p>
 						<Link href="/auth/register">
-							<div className="duration-300 hover:text-purple-800 hover:underline">
+							<div className="duration-300 hover:text-purple-800 tracking-tight cursor-pointer hover:underline">
 								Register
 							</div>
 						</Link>
 					</div>
 					<Link href="#">
-						<div className="duration-300 hover:text-orange-600 hover:underline">
+						<div className="duration-300 hover:text-orange-600 cursor-pointer tracking-tight hover:underline">
 							Forgot Password?
 						</div>
 					</Link>
 				</div>
 				<button
-					className="rounded bg-purple-600 p-3 px-10 font-semibold text-white duration-300 hover:bg-purple-800"
+					className="rounded bg-purple-600 p-3 px-10 tracking-tight font-semibold text-lg text-white duration-300 hover:bg-purple-800"
 					type="submit"
 				>
 					{isLoading ? "Please wait..." : "Submit"}
 				</button>
 			</div>
+
+			{response && response?.message?.includes("inactive") ? (
+				<Link href="/auth/activate">
+					<div className="animate__animated animate__slideInDown flex justify-center w-full mt-5 cursor-pointer">
+						<div className="rounded text-center w-full bg-gray-600 p-3 px-10 tracking-tight text-lg font-semibold text-white duration-300 hover:bg-gray-800">
+							Activate account
+						</div>
+					</div>
+				</Link>
+			) : (
+				""
+			)}
 		</form>
 	);
 };
