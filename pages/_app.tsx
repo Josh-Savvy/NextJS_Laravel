@@ -52,7 +52,8 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 			<Head>
 				<meta charSet="UTF-8" />
 				<meta content="width=device-width, initial-scale=1.0" name="viewport" />
-				<title>Posty ({1 + " new notification"})</title>
+				<title>Posty</title>
+				{/* <title>Posty ({1 + " new notification"})</title> */}
 			</Head>
 			<Component {...pageProps} />
 		</Layout>

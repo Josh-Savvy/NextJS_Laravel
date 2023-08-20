@@ -56,6 +56,8 @@ const LoginPageTemplate = () => {
 							</svg>
 						</span>
 						<input
+							autoFocus
+							autoComplete="off"
 							className={`${
 								error && error["email"] ? "border-red-500" : ""
 							} block w-full min-w-0 flex-1 tracking-tight rounded-none rounded-r-lg border border-gray-300 bg-gray-50 py-4 p-2.5 text-sm text-gray-900 outline-none`}
@@ -98,6 +100,7 @@ const LoginPageTemplate = () => {
 							</svg>
 						</span>
 						<input
+							autoComplete="off"
 							className={`${
 								error && error["password"] ? "border-red-500" : ""
 							} block w-full min-w-0 flex-1 tracking-tight rounded-none rounded-r-lg border border-gray-300 bg-gray-50 py-4 p-2.5 text-sm text-gray-900 outline-none`}

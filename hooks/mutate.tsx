@@ -3,7 +3,6 @@ import axiosInstance from "../lib/axiosInstance";
 import { toast } from "react-toastify";
 import { Checkmark, Warning } from "react-ionicons";
 import { useRouter } from "next/router";
-import csrfToken from "../utils/csrfToken";
 
 const useLoginMutation = (initialState: {
 	email: string;
@@ -47,10 +46,12 @@ const useLoginMutation = (initialState: {
 			});
 			console.log(response.data);
 			setData(response.data);
-			setTimeout(() => {
-				if (next) router.replace(next.toString());
-				router.replace("/profile");
-			}, 2000);
+			if (response.data) {
+				setTimeout(() => {
+					if (next) router.replace(next.toString());
+					router.replace("/profile");
+				}, 2000);
+			}
 		} catch (error: any) {
 			console.log("Error logging in: ", error);
 			setIsLoading(false);

@@ -1,8 +1,13 @@
 import React from "react";
-import withAuth from "../auth/withAuth";
+import useAuth from "../../hooks/auth";
 
-const ProfilePage = () => {
-	return <div>ProfilePage</div>;
+const ProfilePage = ({}: any) => {
+	const { user, isLoading } = useAuth();
+	return (
+		<div>
+			<div>{isLoading ? "Loading..." : `Name: ${user?.name}`}</div>
+		</div>
+	);
 };
 
-export default withAuth(ProfilePage);
+export default ProfilePage;
