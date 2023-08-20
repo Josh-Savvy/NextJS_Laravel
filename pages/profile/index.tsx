@@ -1,8 +1,8 @@
 import React from "react";
 import useAuth from "../../hooks/auth";
+import withAuth from "../auth/withAuth";
 
-const ProfilePage = ({}: any) => {
-	const { user, isLoading } = useAuth();
+const ProfilePage = ({ user, isLoading }: any) => {
 	return (
 		<div>
 			<div>{isLoading ? "Loading..." : `Name: ${user?.name}`}</div>
@@ -10,4 +10,4 @@ const ProfilePage = ({}: any) => {
 	);
 };
 
-export default ProfilePage;
+export default withAuth(ProfilePage);

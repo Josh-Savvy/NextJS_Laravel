@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { useRegisterMutation } from "../../../hooks/mutate";
+import useRegisterMutation from "../../../hooks/mutations/register";
 
 const RegisterPageTemplate = () => {
 	const initialState = {

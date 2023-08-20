@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { useLoginMutation } from "../../../hooks/mutate";
+import  useLoginMutation  from "../../../hooks/mutations/login";
 
 const LoginPageTemplate = () => {
 	const initialState = {
